@@ -1,84 +1,70 @@
 'use strict';
 
-const defaultResult = 0;
+const addMovieBtn = document.getElementById('add-movie-btn');
+const searchMovieBtn = document.getElementById('search-btn');
+const movieListEl = document.getElementById('movie-list');
 
-let currentResult = defaultResult;
+const movies = [
+    {id: 1, info: {title: 'Avengers: The Infinity War', releaseDate: 2022}},
+    {id: 2, info: {title: 'Avengers: Secret War', releaseDate: 2022}},
+    {id: 3, info: {title: 'The Dark Knight', releaseDate: 2022}},
+];
 
-const logEntries = [];
-
-const getInputNumber = function () {
-    return parseInt(userInput.value);
+const updateUi = function () {
+    if(movies.length > 0) {
+        movieListEl.classList.add('visible');
+    }
+    else{
+        movieListEl.classList.remove('visible');
+    }
 };
 
-const logCalculationDescription = function (operator, previousResult, inputNumber) {
-    const calculationDescription = `${previousResult} ${operator} ${inputNumber}`;
+const renderMovie = function (movie) {
+    const movieEl = document.createElement('li');
 
-    outputResult(currentResult, calculationDescription);
-};
-
-const addLogEntry = function (logEntry) {
-    logEntries.push(logEntry);
-};
-
-const calculateOperation = function (operator) {
-    const previousResult = currentResult;
-    const inputNumber = getInputNumber();
-
-    switch(operator){
-        case '+':
-            currentResult += inputNumber;
-            break;
-        case '-':
-            currentResult -= inputNumber;
-            break;
-        case '*':
-            currentResult *= inputNumber;
-            break;
-        case '/':
-            currentResult /= inputNumber;
-            break;
+    for(const key in movie.info) {
+        if(key !== 'title'){
+            movieEl.textContent = `${movie.info.title} - ${key}:${movie.info[key]}`;
+        }
     }
 
-    logCalculationDescription(operator, previousResult, inputNumber);
+    movieListEl.appendChild(movieEl);
 
-    return {
-        previousResult,
-        operator,
-        inputNumber,
-        currentResult
+    updateUi();
+};
+
+const renderSearchMovies = function (searchTerm = '') {
+    const searchMovies = !searchTerm ? movies : movies.filter(movie => movie.info.title.toLowerCase().includes(searchTerm));
+
+    movieListEl.innerHTML = '';
+
+    searchMovies.forEach(movie => {
+        renderMovie(movie);
+    });
+};
+
+addMovieBtn.addEventListener('click', function () {
+    const title = document.getElementById('title').value.trim();
+    const extraName = document.getElementById('extra-name').value.trim();
+    const extraValue = document.getElementById('extra-value').value.trim();
+
+    if([title, extraName, extraValue].includes('')) return;
+
+    const newMovie = {
+        id: movies.length + 1,
+        info: {
+            title,
+            [extraName]: extraValue
+        }
     };
-};
 
-const add = function () {
-    const logEntry = calculateOperation('+');
-    addLogEntry(logEntry);
-};
+    movies.push(newMovie);
 
-const subtract = function () {
-    const logEntry = calculateOperation('-');
-    addLogEntry(logEntry);
-};
+    renderMovie(newMovie);
+});
 
-const multiply = function () {
-    const logEntry = calculateOperation('*');
-    addLogEntry(logEntry);
-};
+searchMovieBtn.addEventListener('click', function () {
+    const searchTerm = document.getElementById('filter-title').value.trim().toLowerCase();
 
-const divide = function () {
-    const logEntry = calculateOperation('/');
-    addLogEntry(logEntry);
-};
-
-addBtn.addEventListener('click', add);
-
-subtractBtn.addEventListener('click', subtract);
-
-multiplyBtn.addEventListener('click', multiply);
-
-divideBtn.addEventListener('click', divide);
-
-if([]){
-    console.log('yes');
-}else{
-    console.log('no');
-}
+    renderSearchMovies(searchTerm);
+});

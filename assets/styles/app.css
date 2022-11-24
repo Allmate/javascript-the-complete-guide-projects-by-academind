@@ -3,77 +3,89 @@
 }
 
 html {
-  font-family: 'Roboto', open-sans;
+  font-family: sans-serif;
 }
 
 body {
   margin: 0;
 }
 
-header {
-  background: #023d6d;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  width: 100%;
-}
-
-#results,
-#calculator {
-  margin: 2rem auto;
-  width: 40rem;
-  max-width: 90%;
-  border: 1px solid #023d6d;
-  border-radius: 10px;
-  padding: 1rem;
-  color: #023d6d;
-}
-
-#results {
-  text-align: center;
-}
-
-#calculator input {
-  font: inherit;
-  font-size: 3rem;
-  border: 2px solid #023d6d;
-  width: 10rem;
-  padding: 0.15rem;
-  margin: auto;
+label {
+  font-weight: bold;
   display: block;
-  color: #023d6d;
-  text-align: center;
+  color: #494949;
 }
 
-#calculator input:focus {
-  outline: none;
-}
-
-#calculator button {
+input {
   font: inherit;
-  background: #023d6d;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  color: #494949;
+  width: 100%;
+  display: block;
+  margin: 1rem 0;
+}
+
+input:focus {
+  outline: none;
+  border-color: #ff0062;
+}
+
+button {
+  font: inherit;
+  border: 1px solid #ff0062;
   color: white;
-  border: 1px solid #023d6d;
-  padding: 1rem;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  background: #ff0062;
   cursor: pointer;
 }
 
-#calculator button:focus {
+button:focus {
   outline: none;
 }
 
-#calculator button:hover,
-#calculator button:active {
-  background: #084f88;
-  border-color: #084f88;
+button:hover,
+button:active {
+  background: #ff3482;
+  border-color: #ff3482;
 }
 
-#calc-actions button {
-  width: 4rem;
+.card {
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
-#calc-actions {
-  margin-top: 1rem;
-  text-align: center;
+.inline-controls {
+  display: flex;
+}
+
+.control {
+  margin: 1rem;
+}
+
+#user-input,
+#movie-list,
+#filter {
+  width: 50rem;
+  max-width: 90%;
+  margin: 2rem auto;
+}
+
+#movie-list {
+  display: none;
+  list-style: none;
+  padding: 1rem;
+}
+
+#movie-list.visible {
+  display: block;
+}
+
+#movie-list li {
+  margin: 1rem;
+  color: #ff0062;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
