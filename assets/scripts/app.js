@@ -1,116 +1,163 @@
-'use strict';
-
-const CHOSEN_MAX_HEALTH = 100;
-const PLAYER_ATTACK_DAMAGE = 5;
-const PLAYER_STRONG_ATTACK_DAMAGE = 13;
-const MONSTER_ATTACK_DAMAGE = 10;
-const HEAL_VALUE = 20;
-const logEntries = [];
-
-const LOG_EVENT_PLAYER_ATTACK = 'PLAYER_ATTACK';
-const LOG_EVENT_PLAYER_STRONG_ATTACK = 'PLAYER_STRONG_ATTACK';
-const LOG_EVENT_MONSTER_ATTACK = 'MONSTER_ATTACK';
-const LOG_EVENT_PLAYER_HEAL = 'PLAYER_HEAL';
-const LOG_EVENT_GAME_OVER = 'GAME_OVER';
-const LOG_EVENT_REMOVE_BONUS_LIFE = 'REMOVE_BONUS_LIFE';
-
-let hasBonusLife = true;
-let currentPlayerHealth = CHOSEN_MAX_HEALTH;
-let currentMonsterHealth = CHOSEN_MAX_HEALTH;
-let logIndex = 0;
-
-adjustHealthBars(CHOSEN_MAX_HEALTH);
-
-const writeToLog = function (event, value, monsterHealth, playerHealth) {
-    const logEntry = {
-        event,
-        value,
-        monsterHealth,
-        playerHealth,
-    };
-
-    switch (event) {
-        case LOG_EVENT_PLAYER_ATTACK:
-        case LOG_EVENT_PLAYER_STRONG_ATTACK:
-            logEntry.target = 'MONSTER';
-            break;
-        case LOG_EVENT_MONSTER_ATTACK:
-        case LOG_EVENT_PLAYER_HEAL:
-            logEntry.target = 'PLAYER';
+class ElementAttribute {
+    constructor(attrName, attrValue) {
+        this.name = attrName;
+        this.value = attrValue;
     }
+}
 
-    logEntries.push(logEntry);
-};
-
-const attackPlayer = function (damage) {
-    const monsterDamage = dealPlayerDamage(damage);
-    currentPlayerHealth -= monsterDamage;
-
-    writeToLog(LOG_EVENT_MONSTER_ATTACK, monsterDamage, currentMonsterHealth, currentPlayerHealth);
-};
-
-const calculateMatchResult = function () {
-    // check bonusLife exist
-    if (currentPlayerHealth <= 0 && hasBonusLife) {
-        hasBonusLife = false;
-        removeBonusLife();
-        setPlayerHealth(CHOSEN_MAX_HEALTH);
-        currentPlayerHealth = CHOSEN_MAX_HEALTH;
-
-        writeToLog(LOG_EVENT_REMOVE_BONUS_LIFE, 'REMOVE_BONUS_LIFE', currentMonsterHealth, currentPlayerHealth);
-
-        return;
-    }
-
-    if (currentMonsterHealth <= 0 && currentPlayerHealth > 0) {
-        writeToLog(LOG_EVENT_GAME_OVER, 'PLAYER_WON', currentMonsterHealth, currentPlayerHealth);
-        alert('You win!');
-    } else if (currentPlayerHealth <= 0 && currentMonsterHealth > 0) {
-        writeToLog(LOG_EVENT_GAME_OVER, 'MONSTER_WON', currentMonsterHealth, currentPlayerHealth);
-        alert('You lost!');
-    } else if (currentPlayerHealth <= 0 && currentMonsterHealth <= 0) {
-        writeToLog(LOG_EVENT_GAME_OVER, 'A DRAW', currentMonsterHealth, currentPlayerHealth);
-        alert('You have a draw');
-    }
-};
-
-const attackMonster = function (damage) {
-    const playerDamage = dealMonsterDamage(damage);
-    currentMonsterHealth -= playerDamage;
-
-    writeToLog(LOG_EVENT_PLAYER_ATTACK, playerDamage, currentMonsterHealth, currentPlayerHealth);
-
-    attackPlayer(MONSTER_ATTACK_DAMAGE);
-
-    calculateMatchResult();
-};
-
-attackBtn.addEventListener('click', () => attackMonster(PLAYER_ATTACK_DAMAGE));
-
-strongAttackBtn.addEventListener('click', () => attackMonster(PLAYER_STRONG_ATTACK_DAMAGE));
-
-healBtn.addEventListener('click', () => {
-    // check healAmount must not be exceeded CHOSEN_MAX_HEALTH
-    if (currentPlayerHealth < CHOSEN_MAX_HEALTH) {
-        if ((currentPlayerHealth + HEAL_VALUE) > CHOSEN_MAX_HEALTH) {
-            currentPlayerHealth = Math.round(currentPlayerHealth);
-            const reducedHealAmount = CHOSEN_MAX_HEALTH - currentPlayerHealth;
-            increasePlayerHealth(reducedHealAmount);
-            currentPlayerHealth += reducedHealAmount;
-            writeToLog(LOG_EVENT_PLAYER_HEAL, reducedHealAmount, currentMonsterHealth, currentPlayerHealth);
-        } else {
-            increasePlayerHealth(HEAL_VALUE);
-            currentPlayerHealth += HEAL_VALUE;
-            writeToLog(LOG_EVENT_PLAYER_HEAL, HEAL_VALUE, currentMonsterHealth, currentPlayerHealth);
+class Component {
+    constructor(hookId, shouldRender = true) {
+        this.renderHookId = hookId;
+        if (shouldRender) {
+            this.render();
         }
     }
-});
 
-logBtn.addEventListener('click', () => {
-    for (const logEntry of logEntries) {
-        console.log('#', ++logIndex);
-        for (const key in logEntry) {
-            console.log(key, logEntry[key]);
+    render() {
+
+    }
+
+    createRootElement(tagName, cssClasses, attributes) {
+        const rootElement = document.createElement(tagName);
+
+        if (cssClasses && cssClasses.length > 0) {
+            rootElement.className = cssClasses;
+        }
+
+        if (attributes && attributes.length > 0) {
+            attributes.forEach(attribute => {
+                rootElement.setAttribute(attribute.name, attribute.value);
+            });
+        }
+
+        document.getElementById(this.renderHookId).appendChild(rootElement);
+
+        return rootElement;
+    }
+}
+
+class Product {
+    constructor(title, imageUrl, price, description) {
+        this.title = title;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.description = description;
+    }
+}
+
+class ProductItem extends Component {
+    constructor(hookId, product) {
+        super(hookId, false);
+        this.product = product;
+        this.render();
+    }
+
+    addToCart() {
+        App.addProductToCart(this.product);
+    }
+
+    render() {
+        const productEl = this.createRootElement('li', 'product-item');
+        productEl.innerHTML = `
+                <div>
+                    <img src="${this.product.imageUrl}" alt="${this.product.title}" />
+                    <div class="product-item__content">
+                        <h2>${this.product.title}</h2>
+                        <h3>\$${this.product.price}</h3>          
+                        <button>Add to Cart</button>
+                    </div>
+                </div>
+            `;
+        const addToCartBtn = productEl.querySelector('button');
+
+        addToCartBtn.addEventListener('click', this.addToCart.bind(this));
+    }
+}
+
+class ProductList extends Component {
+    products = [];
+
+    constructor(hookId) {
+        super(hookId);
+        this.fetchProducts();
+    }
+
+    fetchProducts() {
+        this.products = [
+            new Product('A Good Quality Laptop', 'https://m.media-amazon.com/images/I/71nux68SjIL._AC_UY218_.jpg', 499.99, 'A Laptop for Gamer'),
+            new Product('Game Controller', 'https://m.media-amazon.com/images/I/61IG46p-yHL.jpg', 20.99, 'the best game controller for player'),
+            new Product('MINECRAFT', 'https://m.media-amazon.com/images/I/71TQeUM4A8L.jpg', 4.99, 'the game about placing blocks')
+        ];
+
+        this.renderProducts();
+    }
+
+    renderProducts() {
+        for (const product of this.products) {
+            new ProductItem('productList', product);
         }
     }
-});
+
+    render() {
+        this.createRootElement('ul', 'product-list', [new ElementAttribute('id', 'productList')]);
+        if (this.products && this.products.length > 0) {
+            this.renderProducts();
+        }
+    }
+}
+
+class ShoppingCart extends Component {
+    items = [];
+
+    constructor(hookId) {
+        super(hookId);
+    }
+
+    get totalAmount() {
+        return this.items.reduce((totalAmount, product) => totalAmount + product.price, 0);
+    }
+
+    addProduct(product) {
+        this.items.push(product);
+        this.totalOutput.textContent = `Total \$${this.totalAmount.toFixed(2)}`
+    }
+
+    orderProduct() {
+        console.log(this.items);
+    }
+
+    render() {
+        const cartEl = this.createRootElement('section', 'cart');
+        cartEl.innerHTML = `
+            <h2>Total \$${0}</h2>
+            <button>Order Now</button>
+        `;
+
+        this.totalOutput = cartEl.querySelector('h2');
+        const orderBtn = cartEl.querySelector('button');
+
+        orderBtn.addEventListener('click', () => this.orderProduct());
+    }
+}
+
+class Shop {
+    cart = new ShoppingCart('app');
+    productList = new ProductList('app');
+}
+
+class App {
+    // this keyword in static method refers its class(App).
+
+    static cart; // for readability
+
+    static init() {
+        const shop = new Shop();
+        this.cart = shop.cart;
+    }
+
+    static addProductToCart(product) {
+        this.cart.addProduct(product);
+    }
+}
+
+App.init();

@@ -1,51 +1,41 @@
+* {
+  box-sizing: border-box;
+}
+
 html {
   font-family: sans-serif;
 }
 
 body {
-  background: #2c2c2c;
+  margin: 0;
 }
 
-h2 {
-  font-size: 1.25rem;
-  margin: 1rem 0.5rem;
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #540075;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.26);
 }
 
-progress {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  width: 80%;
-  height: 2rem;
-  color: #ff0062;
-  border: 1px solid #a927f5;
-}
-
-progress[value]::-webkit-progress-bar,
-progress[value] {
-  background-color: #eee;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-}
-
-progress[value]::-webkit-progress-value {
-  background-color: #a927f5;
-  transition: all 0.2s ease-out;
-}
-
-progress[value]::-moz-progress-bar {
-  background-color: #a927f5;
-  transition: all 0.2s ease-out;
+header h1 {
+  color: white;
+  font-size: 2rem;
 }
 
 button {
-  font: inherit;
-  background: #ff0062;
-  border: 1px solid #ff0062;
+  background: #540075;
   color: white;
-  padding: 1rem 2rem;
-  border-radius: 6px;
+  border: 1px solid #540075;
+  border-radius: 5px;
+  padding: 0.5rem 2rem;
+  font: inherit;
   cursor: pointer;
-  margin: 0.5rem;
 }
 
 button:focus {
@@ -54,33 +44,50 @@ button:focus {
 
 button:hover,
 button:active {
-  background: #a927f5;
-  border-color: #a927f5;
+  background: #790fa3;
+  border-color: #790fa3;
 }
 
-#health-levels,
-#controls {
-  margin: 2rem auto;
-  width: 30rem;
-  text-align: center;
+.cart {
+  margin: 5rem 2rem;
+  border: 2px solid #540075;
   border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  background: white;
-}
-
-#controls {
+  padding: 2rem;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
 }
 
-#bonus-life {
-  font-weight: bold;
-  color: white;
-  background: #ff0062;
-  border: 1px solid #ff0062;
-  padding: 0.15rem 0.5rem;
-  border-radius: 10px;
+.cart h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #540075;
+}
+
+.product-list {
+  list-style: none;
+  margin: 0 2rem;
+  padding: 0;
+}
+
+.product-item {
+  margin: 2rem auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  width: 50rem;
+  max-width: 90%;
+}
+
+.product-item img {
+  width: 100%;
+  height: 20rem;
+  object-fit: cover;
+}
+
+.product-item__content {
+  padding: 1rem;
   text-align: center;
-  margin: 0 0.5rem;
+}
+
+.product-item h2,
+.product-item h3 {
+  margin: 0 0 1rem 0;
 }
