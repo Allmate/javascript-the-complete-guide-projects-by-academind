@@ -1,35 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Basics</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="assets/styles/app.css" />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+    <title>Project Board</title>
+    <link href="assets/styles/app.css" rel="stylesheet"/>
+    <!--    <script defer src="assets/scripts/custom.js"></script>-->
+    <script defer src="assets/scripts/app.js"></script>
+</head>
+<body>
+<header id="main-header">
+    <h1>Project Planner</h1>
+</header>
+<section id="active-projects">
     <header>
-      <h1>The Unconventional Calculator</h1>
+        <h2>Active Projects</h2>
     </header>
-
-    <section id="calculator">
-      <input type="number" id="input-number" />
-      <div id="calc-actions">
-        <button type="button" id="btn-add">+</button>
-        <button type="button" id="btn-subtract">-</button>
-        <button type="button" id="btn-multiply">*</button>
-        <button type="button" id="btn-divide">/</button>
-      </div>
-    </section>
-    <section id="results">
-      <h2 id="current-calculation">0</h2>
-      <h2>Result: <span id="current-result">0</span></h2>
-    </section>
-    <script src="assets/scripts/vendor.js"></script>
-    <script src="assets/scripts/app.js"></script>
-  </body>
+    <ul>
+        <li
+                class="card"
+                data-extra-info="Got lifetime access, but would be nice to finish it soon!"
+                draggable="true"
+                id="p1"
+        >
+            <h2>Finish the Course</h2>
+            <p>Finish the course within the next two weeks.</p>
+            <button class="alt">More Info</button>
+            <button>Finish</button>
+        </li>
+        <li
+                class="card"
+                data-extra-info="Not really a business topic but still important."
+                draggable="true"
+                id="p2"
+        >
+            <h2>Buy Groceries</h2>
+            <p>Don't forget to pick up groceries today.</p>
+            <button class="alt">More Info</button>
+            <button>Finish</button>
+        </li>
+    </ul>
+</section>
+<section id="finished-projects">
+    <header>
+        <h2>Finished Projects</h2>
+    </header>
+    <ul>
+        <li
+                class="card"
+                data-extra-info="Super important conference! Fictional but still!"
+                draggable="true"
+                id="p3"
+        >
+            <h2>Book Hotel</h2>
+            <p>
+                Academind conference takes place in December, don't forget to book a
+                hotel.
+            </p>
+            <button class="alt">More Info</button>
+            <button>Activate</button>
+        </li>
+    </ul>
+</section>
+</body>
 </html>
