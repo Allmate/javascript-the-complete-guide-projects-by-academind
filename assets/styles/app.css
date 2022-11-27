@@ -3,7 +3,7 @@
 }
 
 html {
-  font-family: 'Roboto', open-sans;
+  font-family: sans-serif;
 }
 
 body {
@@ -11,69 +11,83 @@ body {
 }
 
 header {
-  background: #023d6d;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4rem;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #540075;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.26);
 }
 
-#results,
-#calculator {
-  margin: 2rem auto;
-  width: 40rem;
-  max-width: 90%;
-  border: 1px solid #023d6d;
-  border-radius: 10px;
-  padding: 1rem;
-  color: #023d6d;
-}
-
-#results {
-  text-align: center;
-}
-
-#calculator input {
-  font: inherit;
-  font-size: 3rem;
-  border: 2px solid #023d6d;
-  width: 10rem;
-  padding: 0.15rem;
-  margin: auto;
-  display: block;
-  color: #023d6d;
-  text-align: center;
-}
-
-#calculator input:focus {
-  outline: none;
-}
-
-#calculator button {
-  font: inherit;
-  background: #023d6d;
+header h1 {
   color: white;
-  border: 1px solid #023d6d;
-  padding: 1rem;
+  font-size: 2rem;
+}
+
+button {
+  background: #540075;
+  color: white;
+  border: 1px solid #540075;
+  border-radius: 5px;
+  padding: 0.5rem 2rem;
+  font: inherit;
   cursor: pointer;
 }
 
-#calculator button:focus {
+button:focus {
   outline: none;
 }
 
-#calculator button:hover,
-#calculator button:active {
-  background: #084f88;
-  border-color: #084f88;
+button:hover,
+button:active {
+  background: #790fa3;
+  border-color: #790fa3;
 }
 
-#calc-actions button {
-  width: 4rem;
+.cart {
+  margin: 5rem 2rem;
+  border: 2px solid #540075;
+  border-radius: 10px;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
 }
 
-#calc-actions {
-  margin-top: 1rem;
+.cart h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #540075;
+}
+
+.product-list {
+  list-style: none;
+  margin: 0 2rem;
+  padding: 0;
+}
+
+.product-item {
+  margin: 2rem auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  width: 50rem;
+  max-width: 90%;
+}
+
+.product-item img {
+  width: 100%;
+  height: 20rem;
+  object-fit: cover;
+}
+
+.product-item__content {
+  padding: 1rem;
   text-align: center;
+}
+
+.product-item h2,
+.product-item h3 {
+  margin: 0 0 1rem 0;
 }
