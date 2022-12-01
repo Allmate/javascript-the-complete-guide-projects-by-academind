@@ -6,35 +6,24 @@ const fetchPostsBtn = document.querySelector('#available-posts button');
 const createPostBtn = document.querySelector('form button');
 
 const sendHttpRequest = function (method, url, data = null, responseType = 'json') {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open(method, url);
-
-        xhr.responseType = responseType;
-
-        xhr.onload = function () {
-            if(xhr.status >= 200 && xhr.status < 300) {
-                resolve(xhr.response);
+    if(!data) {
+        return fetch(url, {method}).then(response => {
+            if(response.status >= 200 && response.status < 300) {
+                return response.json();
             }
+            console.log(response.status);
+            throw new Error('cannot fetch posts! --server side');
+        });
+    }
 
-            reject(new Error('cannot fetch posts!'));
-        };
-
-        xhr.onerror = function () {
-            // call func for network issue
-            reject(new Error('failed to send request!'));
-        };
-
-        if(data) {
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(data));
-
-            return;
-        }
-
-        xhr.send();
-    });
+    return fetch(url, {
+        method: method,
+        // headers: {
+        //     'Content-Type': 'application/json'
+        // },
+        // body: JSON.stringify(data),
+        body: data
+    }).then(response => responseType === 'json' ? response.json() : response.text());
 };
 
 const fetchPosts = async function () {
@@ -53,13 +42,18 @@ const fetchPosts = async function () {
 };
 
 const createPost = async function (title, body) {
-    const post = {
-        id: Math.random(),
-        title,
-        body
-    };
+    // const post = {
+    //     id: Math.random(),
+    //     title,
+    //     body
+    // };
 
-    const {id: postId} = await sendHttpRequest('POST', 'https://jsonplaceholder.typicode.com/posts', post);
+    // working with formData
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('body', body);
+
+    const {id: postId} = await sendHttpRequest('POST', 'https://jsonplaceholder.typicode.com/posts', formData);
 
     return postId;
 };
@@ -87,3 +81,6 @@ listEl.addEventListener('click', async (event) => {
         deletePost(postId).then(console.log);
     }
 });
+
+
+
